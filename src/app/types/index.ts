@@ -5,6 +5,7 @@ export type CarouselSlide = {
     buttonText: string;
     buttonLink: string;
     image?: string;
-    color?: string;
-    backgroundColor?: string;
+    backgroundColor: string;
+    buttonTextColor: string;
+    buttonHoverColor: string;
   };

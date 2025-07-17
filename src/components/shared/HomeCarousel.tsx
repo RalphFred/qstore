@@ -7,15 +7,16 @@ import { CarouselSlide } from '../../app/types';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 
-const slides = [
+const slides: CarouselSlide[] = [
     {
       featuredText: "Featured",
       title: "Clearance Sales This Season",
       subtitle: "Save up to 25% on all products",
       buttonText: "Shop Now",
       buttonLink: "/products/sales",
-      color: "purple-400",
-      backgroundColor: "bg-purple-400"
+      backgroundColor: "bg-purple-400",
+      buttonTextColor: "text-purple-400",
+      buttonHoverColor: "hover:bg-purple-100",
     },
     {
       featuredText: "New Arrivals",
@@ -23,8 +24,9 @@ const slides = [
       subtitle: "The best of the best is here",
       buttonText: "Shop Now",
       buttonLink: "/products/new",
-      color: "pink-400",
-      backgroundColor: "bg-pink-400"
+      backgroundColor: "bg-pink-400",
+      buttonTextColor: "text-pink-400",
+      buttonHoverColor: "hover:bg-pink-100",
     },
     {
       featuredText: "Best Sellers",
@@ -32,8 +34,9 @@ const slides = [
       subtitle: "See what everyone is talking about",
       buttonText: "Shop Now",
       buttonLink: "/products/popular",
-      color: "blue-400",
-      backgroundColor: "bg-blue-400"
+      backgroundColor: "bg-blue-400",
+      buttonTextColor: "text-blue-400",
+      buttonHoverColor: "hover:bg-blue-100",
     },
   ];
 
@@ -61,7 +64,7 @@ export default function HomeCarousel() {
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4">{slide.title}</h2>
               <p className="text-base md:text-lg mb-6">{slide.subtitle}</p>
               <Link href={slide.buttonLink}>
-                <Button className={`bg-white text-${slide.color} hover:bg-${slide.color}/90`}>
+                <Button className={`bg-white ${slide.buttonTextColor} ${slide.buttonHoverColor}`}>
                   {slide.buttonText}
                 </Button>
               </Link>
