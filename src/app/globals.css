@@ -125,4 +125,15 @@
   --color-primary: #6100a5;
   --color-secondary: #201749;
   --color-accent: #FB3AA2;
+
+  --color-purple-1: #E7CFFF;
+  --color-purple-2: #F2EBFE
+}
+
+* {
+  font-family: var(--font-montserrat);
+}
+
+@utility wrapper {
+  @apply max-w-7xl mx-auto px-4;
 }
