@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Topbar() {
   return (
-    <div className="wrapper py-2">
+    <div className="wrapper py-2 border-b border-gray-200">
       <div className="flex justify-between items-center">
         <Link href="/">
           <Image

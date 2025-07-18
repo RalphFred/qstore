@@ -9,3 +9,16 @@ export type CarouselSlide = {
     buttonTextColor: string;
     buttonHoverColor: string;
   };
+
+  export type Product = {
+    id: number;
+    name: string;
+    price: number;
+    discounted: number;
+    image: string[];
+    category: string;
+    description: string;
+    isFeatured: boolean;
+    isNew: boolean;
+    isBestSeller: boolean;
+  }
