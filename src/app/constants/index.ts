@@ -30,7 +30,7 @@ export const products = [
     {
         id: 8,
         name: "Anistone Hi Leather Biker Boots",
-        price: 175000,
+        price: 175000.00,
         discounted: 0, 
         image: ["/images/products/product-8(0).webp", "/images/products/product-8(1).webp", "/images/products/product-8(2).webp", "/images/products/product-8(3).webp", "/images/products/product-8(4).webp"],
         category: "BOOTS",
@@ -44,7 +44,7 @@ export const products = [
     {
         id: 10,
         name: "Top Handle Bag",
-        price: 89000,
+        price: 89000.00,
         discounted: 0, 
         image: ["/images/products/product-10(0).webp", "/images/products/product-10(1).webp", "/images/products/product-10(2).webp", "/images/products/product-10(3).webp", "/images/products/product-10(4).webp"],
         category: "ACCESSORIES",

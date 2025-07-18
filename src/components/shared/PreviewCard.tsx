@@ -1,4 +1,5 @@
 import { Product } from "@/app/types";
+import { formatCurrency, formatDiscountedPrice } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,6 +18,14 @@ export default function PreviewCard( {product}: {product: Product} ) {
     label = "FEATURED";
     labelClass = "text-primary";
   } 
+
+   // Format pricing
+   const isDiscounted = product.discounted > 0;
+   const pricing = isDiscounted
+     ? formatDiscountedPrice(product.price, product.discounted, "NGN", "en-NG")
+     : null;
+   const regularPrice = formatCurrency(product.price, "NGN", "en-NG");
+ 
   
 
   return (
@@ -30,12 +39,18 @@ export default function PreviewCard( {product}: {product: Product} ) {
         {product.name}
       </div>
       <div className="flex items-center gap-1 mt-1">
-        <div className="font-semibold text-lg">
-        ₦{product.price}
-        </div>
-        {product.discounted > 0 && (
+        {isDiscounted ? (
+          <div className="font-semibold text-lg">
+            {pricing!.finalPrice}
+          </div>
+        ) : (
+          <div className="font-semibold text-lg">
+            {regularPrice}
+          </div>
+        )}
+        {isDiscounted && (
           <div className="text-xs font-semibold text-red-400  line-through">
-            ₦{product.price - product.discounted}
+            {pricing!.originalPrice}
           </div>
         )}
       </div>
