@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { products } from "@/app/constants";
 import Image from "next/image";
 import BackButton from "@/components/ui/BackButton";
@@ -6,32 +9,92 @@ import { formatCurrency, formatDiscountedPrice } from "@/lib/utils";
 import { Box, Plus, Minus, Star, Truck, Heart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/stores/cart-store";
+import { useFavoriteStore } from "@/stores/favorite-store";
+import { Product } from "@/app/types";
+import { toast } from "sonner";
 
-export default async function ProductPage({
-  params,
-}: {
+interface ProductPageProps {
   params: Promise<{ product: string }>;
-}) {
-  const { product: productId } = await params;
-  const product = products.find(
-    (product) => product.id === parseInt(productId)
-  );
+}
 
-  let label = "";
-  let labelClass = "";
-  if (product?.isNew) {
-    label = "NEW";
-    labelClass = "text-red-500";
-  } else if (product?.isBestSeller) {
-    label = "BESTSELLER";
-    labelClass = "text-accent";
-  } else if (product?.isFeatured) {
-    label = "FEATURED";
-    labelClass = "text-primary";
+export default function ProductPage({ params }: ProductPageProps) {
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Store hooks
+  const { addToCart } = useCartStore();
+  const { toggleFavorite, isFavorite } = useFavoriteStore();
+
+  // Load product data
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const resolvedParams = await params;
+        const productId = parseInt(resolvedParams.product);
+        const foundProduct = products.find(p => p.id === productId);
+        setProduct(foundProduct || null);
+      } catch (error) {
+        console.error("Error loading product:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProduct();
+  }, [params]);
+
+  // Quantity handlers
+  const incrementQuantity = () => setQuantity(prev => prev + 1);
+  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (!isNaN(value) && value >= 1) {
+      setQuantity(value);
+    }
+  };
+
+  // Action handlers
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity);
+      toast.success(`${product.name} added to cart`);
+    }
+  };
+
+  const handleToggleFavorite = () => {
+    if (product) {
+      const wasInFavorites = isFavorite(product.id);
+      toggleFavorite(product);
+      
+      if (wasInFavorites) {
+        toast.info(`${product.name} removed from favorites`);
+      } else {
+        toast.info(`${product.name} added to favorites`);
+      }
+    }
+  };
+
+  if (loading) {
+    return <div className="pb-32 bg-neutral-100 flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div className="pb-32 bg-neutral-100 flex items-center justify-center min-h-screen">Product not found</div>;
+  }
+
+  // Label logic
+  let label = "";
+  let labelClass = "";
+  if (product.isNew) {
+    label = "NEW";
+    labelClass = "text-red-500";
+  } else if (product.isBestSeller) {
+    label = "BESTSELLER";
+    labelClass = "text-accent";
+  } else if (product.isFeatured) {
+    label = "FEATURED";
+    labelClass = "text-primary";
   }
 
   // Format pricing
@@ -41,8 +104,11 @@ export default async function ProductPage({
     : null;
   const regularPrice = formatCurrency(product.price, "NGN", "en-NG");
 
+  // Check if favorited
+  const isProductFavorited = isFavorite(product.id);
+
   return (
-    <div className="pb-32 bg-neutral-100">
+    <div className="pb-18 bg-neutral-100">
       <div className="wrapper border-b border-gray-200 flex gap-2 items-center py-4 bg-white">
         <BackButton />
         <h1 className="font-semibold">Details</h1>
@@ -93,18 +159,42 @@ export default async function ProductPage({
       </div>
 
       <div className="wrapper flex gap-2 py-4">
-        <div className="w-12 h-12 bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer">
+        <button 
+          onClick={decrementQuantity}
+          className="w-12 h-12 bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors"
+        >
           <Minus />
+        </button>
+        <div className="flex-1">
+          <Input 
+            type="number" 
+            value={quantity}
+            onChange={handleQuantityChange}
+            min="1"
+            className="text-lg w-full h-12 text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+          />
         </div>
-        <div className="flex-1"><Input type="number" className="text-lg w-full h-12 text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"/></div>
-        <div className="w-12 h-12  bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer">
+        <button 
+          onClick={incrementQuantity}
+          className="w-12 h-12 bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors"
+        >
           <Plus />
-        </div>
+        </button>
       </div>
 
       <div className="wrapper py-4 flex items-center gap-2">
-        <Button className="flex-1 text-lg h-12">Add to Cart</Button>
-        <Button variant="outline" className="text-lg h-12 w-12"><Heart className="size-6 text-primary" /></Button>
+        <Button onClick={handleAddToCart} className="flex-1 text-lg h-12">
+          Add to Cart ({quantity})
+        </Button>
+        <Button 
+          onClick={handleToggleFavorite}
+          variant="outline" 
+          className="text-lg h-12 w-12"
+        >
+          <Heart 
+            className={`size-6 ${isProductFavorited ? 'text-primary fill-primary' : 'text-primary'}`} 
+          />
+        </Button>
       </div>
     </div>
   );

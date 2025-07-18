@@ -18,7 +18,21 @@ export type CarouselSlide = {
     image: string[];
     category: string;
     description: string;
+    rating?: number;
+    reviews?: number;
     isFeatured: boolean;
     isNew: boolean;
     isBestSeller: boolean;
+  }
+
+  export interface CartCardProps {
+    productName?: string;
+    brand?: string;
+    color?: string;
+    unitsLeft?: number;
+    originalPrice?: number;
+    discountedPrice?: number;
+    discountPercentage?: number;
+    quantity?: number;
+    image?: string;
   }
