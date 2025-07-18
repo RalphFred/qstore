@@ -1,4 +1,5 @@
 import Topbar from "../../components/shared/Topbar";
+import Footer from "@/components/shared/Footer";
 
 export default function StoreLayout({
   children,
@@ -9,6 +10,7 @@ export default function StoreLayout({
     <div>
         <Topbar />
         {children}
+        <Footer />
     </div>
   );
 }
