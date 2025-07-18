@@ -76,7 +76,7 @@ export default async function ProductPage({
           {product.description}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 font-semibold">
           <Star className="w-4 h-4 text-yellow-400" fill="currentColor" /> {product.rating}
         </div>
       </div>
@@ -96,7 +96,7 @@ export default async function ProductPage({
         <div className="w-12 h-12 bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer">
           <Minus />
         </div>
-        <div><Input type="number" className="text-lg h-12 text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"/></div>
+        <div className="flex-1"><Input type="number" className="text-lg w-full h-12 text-center [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"/></div>
         <div className="w-12 h-12  bg-primary text-lg text-white rounded-lg flex items-center justify-center cursor-pointer">
           <Plus />
         </div>
@@ -104,7 +104,7 @@ export default async function ProductPage({
 
       <div className="wrapper py-4 flex items-center gap-2">
         <Button className="flex-1 text-lg h-12">Add to Cart</Button>
-        <Button variant="outline" className="text-lg h-12 px"><Heart className="" /></Button>
+        <Button variant="outline" className="text-lg h-12 w-12"><Heart className="size-6 text-primary" /></Button>
       </div>
     </div>
   );
